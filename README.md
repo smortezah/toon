@@ -2,6 +2,12 @@
 
 # Token-Oriented Object Notation (TOON)
 
+[![CI](https://github.com/johannschopplich/toon/actions/workflows/ci.yml/badge.svg)](https://github.com/johannschopplich/toon/actions)
+[![npm version](https://img.shields.io/npm/v/@toon-format/toon.svg)](https://www.npmjs.com/package/@toon-format/toon)
+[![SPEC v1.3](https://img.shields.io/badge/spec-v1.3-lightgrey)](./SPEC.md)
+[![npm downloads (total)](https://img.shields.io/npm/dt/@toon-format/toon.svg)](https://www.npmjs.com/package/@toon-format/toon)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
 **Token-Oriented Object Notation** is a compact, human-readable format designed for passing structured data to Large Language Models with significantly reduced token usage. It's intended for LLM input, not output.
 
 TOON's sweet spot is **uniform arrays of objects** – multiple fields per row, same structure across items. It borrows YAML's indentation-based structure for nested objects and CSV's tabular format for uniform data rows, then optimizes both for token efficiency in LLM contexts. For deeply nested or non-uniform data, JSON may be more efficient.
@@ -47,9 +53,9 @@ users[2]{id,name,role}:
 ```
 
 <details>
-<summary>Another reason</summary>
+<summary><strong>Why create a new format?</strong></summary>
 
-[![xkcd: Standards](https://imgs.xkcd.com/comics/standards_2x.png)](https://xkcd.com/927/)
+For small payloads, JSON/CSV/YAML work fine. TOON's value emerges at scale: when you're making hundreds of LLM calls with uniform tabular data, eliminating repeated keys compounds savings significantly. If token costs matter to your use case, TOON reduces them. If not, stick with what works.
 
 </details>
 
@@ -434,19 +440,19 @@ Four datasets designed to test different structural patterns (all contain arrays
 
 ```bash
 # npm
-npm install @byjohann/toon
+npm install @toon-format/toon
 
 # pnpm
-pnpm add @byjohann/toon
+pnpm add @toon-format/toon
 
 # yarn
-yarn add @byjohann/toon
+yarn add @toon-format/toon
 ```
 
 **Example usage:**
 
 ```ts
-import { encode } from '@byjohann/toon'
+import { encode } from '@toon-format/toon'
 
 const data = {
   users: [
@@ -468,20 +474,20 @@ Command-line tool for converting between JSON and TOON formats.
 ### Usage
 
 ```bash
-npx @byjohann/toon <input> [options]
+npx @toon-format/cli <input> [options]
 ```
 
 **Auto-detection:** The CLI automatically detects the operation based on file extension (`.json` → encode, `.toon` → decode).
 
 ```bash
 # Encode JSON to TOON (auto-detected)
-toon input.json -o output.toon
+npx @toon-format/cli input.json -o output.toon
 
 # Decode TOON to JSON (auto-detected)
-toon data.toon -o output.json
+npx @toon-format/cli data.toon -o output.json
 
 # Output to stdout
-toon input.json
+npx @toon-format/cli input.json
 ```
 
 ### Options
@@ -494,19 +500,23 @@ toon input.json
 | `--delimiter <char>` | Array delimiter: `,` (comma), `\t` (tab), `\|` (pipe) |
 | `--indent <number>` | Indentation size (default: `2`) |
 | `--length-marker` | Add `#` prefix to array lengths (e.g., `items[#3]`) |
+| `--stats` | Show token count estimates and savings (encode only) |
 | `--no-strict` | Disable strict validation when decoding |
 
 ### Examples
 
 ```bash
+# Show token savings when encoding
+npx @toon-format/cli data.json --stats -o output.toon
+
 # Tab-separated output (often more token-efficient)
-toon data.json --delimiter "\t" -o output.toon
+npx @toon-format/cli data.json --delimiter "\t" -o output.toon
 
 # Pipe-separated with length markers
-toon data.json --delimiter "|" --length-marker -o output.toon
+npx @toon-format/cli data.json --delimiter "|" --length-marker -o output.toon
 
 # Lenient decoding (skip validation)
-toon data.toon --no-strict -o output.json
+npx @toon-format/cli data.toon --no-strict -o output.json
 ```
 
 ## Format Overview
@@ -732,7 +742,7 @@ A TOON-formatted string with no trailing newline or spaces.
 **Example:**
 
 ```ts
-import { encode } from '@byjohann/toon'
+import { encode } from '@toon-format/toon'
 
 const items = [
   { sku: 'A1', qty: 2, price: 9.99 },
@@ -853,7 +863,7 @@ A JavaScript value (object, array, or primitive) representing the parsed TOON da
 **Example:**
 
 ```ts
-import { decode } from '@byjohann/toon'
+import { decode } from '@toon-format/toon'
 
 const toon = `
 items[2]{sku,qty,price}:
@@ -971,14 +981,16 @@ Task: Return only users with role "user" as TOON. Use the same header. Set [N] t
 ## Other Implementations
 
 > [!NOTE]
-> When implementing TOON in other languages, please follow the [SPEC.md](./SPEC.md) (currently v1.3) to ensure compatibility across implementations. The [TypeScript test suite](./test) provides comprehensive examples of encoding and decoding behavior that can serve as a reference implementation.
+> When implementing TOON in other languages, please follow the [SPEC.md](./SPEC.md) (currently v1.3) to ensure compatibility across implementations. The [TypeScript test suite](./packages/toon/test) provides comprehensive examples of encoding and decoding behavior that can serve as a reference implementation.
 
 - **.NET:** [ToonSharp](https://github.com/0xZunia/ToonSharp)
+- **Crystal:** [toon-crystal](https://github.com/mamantoha/toon-crystal)
 - **Dart:** [toon](https://github.com/wisamidris77/toon)
 - **Elixir:** [toon_ex](https://github.com/kentaro/toon_ex)
 - **Gleam:** [toon_codec](https://github.com/axelbellec/toon_codec)
 - **Go:** [gotoon](https://github.com/alpkeskin/gotoon)
 - **Java:** [JToon](https://github.com/felipestanzani/JToon)
+- **OCaml:** [ocaml-toon](https://github.com/davesnx/ocaml-toon)
 - **PHP:** [toon-php](https://github.com/HelgeSverre/toon-php)
 - **Python:** [python-toon](https://github.com/xaviviro/python-toon) or [pytoon](https://github.com/bpradana/pytoon)
 - **Ruby:** [toon-ruby](https://github.com/andrepcg/toon-ruby)

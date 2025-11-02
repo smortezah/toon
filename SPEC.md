@@ -1,9 +1,15 @@
+# TOON Specification
+
 ## Token-Oriented Object Notation
 
 **Version:** 1.3
+
 **Date:** 2025-10-31
+
 **Status:** Working Draft
+
 **Author:** Johann Schopplich ([@johannschopplich](https://github.com/johannschopplich))
+
 **License:** MIT
 
 ---
@@ -135,9 +141,9 @@ This specification defines:
 ### Type Terms
 
 - Primitive: string, number, boolean, or null.
-- Object: Mapping from string keys to JsonValue.
-- Array: Ordered sequence of JsonValue.
-- JsonValue: Primitive | Object | Array.
+- Object: Mapping from string keys to `JsonValue`.
+- Array: Ordered sequence of `JsonValue`.
+- `JsonValue`: Primitive | Object | Array.
 
 ### Conformance Terms
 
@@ -151,9 +157,9 @@ This specification defines:
 ## 2. Data Model
 
 - TOON models data as:
-  - JsonPrimitive: string | number | boolean | null
-  - JsonObject: { [string]: JsonValue }
-  - JsonArray: JsonValue[]
+  - `JsonPrimitive`: string | number | boolean | null
+  - `JsonObject`: { [string]: `JsonValue` }
+  - `JsonArray`: `JsonValue`[]
 - Ordering:
   - Array order MUST be preserved.
   - Object key order MUST be preserved as encountered by the encoder.
@@ -957,7 +963,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 ### Reference Test Suite
 
 A reference test suite is maintained at:
-https://github.com/johannschopplich/toon/tree/main/test
+https://github.com/johannschopplich/toon/tree/main/packages/toon/test
 
 The test suite is versioned alongside this specification. Implementations are encouraged to validate against this test suite, but conformance is determined solely by adherence to the normative requirements in Sections 1-16 and Section 19 of this specification. Test coverage does not define the specification; the specification defines conformance.
 
